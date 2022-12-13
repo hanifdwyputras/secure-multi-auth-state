@@ -45,7 +45,9 @@ export const useSafeMultiAuthState = async(key: GeneratedKey, folder: string): R
 				break
 			case 'write':
 				const cipher = createCipheriv('aes-256-cbc', key.key, key.iv)
-				const fdw = createWriteStream(pathJoin(folder, fixFileName(file)!))
+				const fdw = createWriteStream(pathJoin(folder, fixFileName(file)!), {
+					'autoClose': true,
+				})
 
 				Readable.from(Buffer.from(JSON.stringify(data))).pipe(cipher).pipe(fdw)
 					.on('error', reject).on('end', resolve).on('close', resolve)
