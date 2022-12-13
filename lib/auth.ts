@@ -4,6 +4,7 @@ import { createCipheriv, createDecipheriv } from 'node:crypto'
 import { createReadStream, createWriteStream, unlink } from 'node:fs'
 import { mkdir, stat } from 'node:fs/promises'
 import { join as pathJoin } from 'node:path'
+import { Readable } from 'node:stream'
 import { type GeneratedKey } from './@types'
 
 type Action = 'write' | 'read' | 'remove';
@@ -20,7 +21,17 @@ export const useSafeMultiAuthState = async(key: GeneratedKey, folder: string): R
 				try {
 					let collected = Buffer.alloc(0)
 					const decipher = createDecipheriv('aes-256-cbc', key.key, key.iv)
-					const fdr = createReadStream(pathJoin(folder, fixFileName(file)!))
+					const fdr = createReadStream(pathJoin(folder, fixFileName(file)!), {
+						'autoClose': true,
+					})
+
+					fdr.on('error', (err: Error & { code: string }) => {
+						if(err.code === 'ENOENT') {
+							return resolve(undefined as V)
+						} else {
+							return reject(err)
+						}
+					})
 
 					fdr.pipe(decipher).on('data', (ch) => {
 						collected = Buffer.concat([collected, Buffer.from(ch)])
@@ -36,19 +47,8 @@ export const useSafeMultiAuthState = async(key: GeneratedKey, folder: string): R
 				const cipher = createCipheriv('aes-256-cbc', key.key, key.iv)
 				const fdw = createWriteStream(pathJoin(folder, fixFileName(file)!))
 
-				fdw.pipe(cipher)
-				fdw.write(JSON.stringify(data), (err) => {
-					if(err) {
-						return reject(err)
-					}
-				})
-				fdw.close((err) => {
-					if(err) {
-						return reject(err)
-					} else {
-						return resolve(undefined as V)
-					}
-				})
+				Readable.from(Buffer.from(JSON.stringify(data))).pipe(cipher).pipe(fdw)
+					.on('error', reject).on('end', resolve).on('close', resolve)
 				break
 			case 'remove':
 				unlink(pathJoin(folder, fixFileName(file)!), (err) => {
