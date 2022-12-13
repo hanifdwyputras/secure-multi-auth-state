@@ -1,5 +1,5 @@
 {
-  "name": "secure-baileys-auth",
+  "name": "safe-usemultiauthstate",
   "version": "1.0.0",
   "description": "Secure .useMultiAuthState to store your sessions",
   "main": "./dist/index.js",
