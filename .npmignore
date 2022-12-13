@@ -3,3 +3,5 @@ tsconfig.json
 .eslintrc.js
 .eslintignore
 lib
+tests
+ava.config.js
