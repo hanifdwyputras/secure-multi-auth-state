@@ -1,6 +1,6 @@
 {
   "name": "safe-usemultiauthstate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Secure .useMultiAuthState to store your sessions",
   "main": "./dist/index.js",
   "scripts": {
@@ -27,5 +27,12 @@
   },
   "dependencies": {
     "@adiwajshing/baileys": "^4.4.0"
+  },
+  "repository": {
+    "url": "https://github.com/hanifdwyputras/secure-multi-auth-state"
+  },
+  "readme": "https://github.com/hanifdwyputras/secure-multi-auth-state/blob/main/README.md",
+  "engines": {
+    "node": ">=12.x"
   }
 }

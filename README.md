@@ -17,7 +17,7 @@ I think, it's not a best practice to secure your session data. But, this is only
 
 ### Example
 ```ts
-import { useSafeMultiAuthState, generateKey } from 'safe-multiauthstate';
+import { useSafeMultiAuthState, generateKey } from 'safe-usemultiauthstate';
 
 // generateKey is an alias for scrypt(pwd, salt, keylen, ...)
 const key = generateKey('secret key', 'salt');
