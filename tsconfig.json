@@ -13,8 +13,9 @@
         "types": [
             "@types/node"
         ],
-        "outDir": "dist"
+        "outDir": "dist",
+        "skipLibCheck": true
     },
-    "exclude": ["node_modules", "dist"],
+    "exclude": ["node_modules", "dist", "tests"],
     "include": ["lib/**/*.ts"]
 }
